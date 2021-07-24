@@ -23,6 +23,6 @@
   - 生成模型文件
     + migrate 文件
     + model 文件
-    + `npx sequelize model:generate --name Todo --attributes name:string,deadline:date,content:string`
+    + `npx sequelize model:generate --name Todo --attributes name:string,deadline:date,content:string,status:integer`
   - 持久化，模型队形的[数据库表]
     + npx sequelize db:migrate

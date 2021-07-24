@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import "../css/list.css";
 import moment from "moment";
-import axios from "axios";
 import {
   Divider,
   Table,
@@ -17,7 +16,9 @@ import {
   Select,
   Popconfirm,
 } from "antd";
+import request from '../utils/request'
 const { Option } = Select;
+
 export default class List extends Component {
   formRef = React.createRef();
   constructor(props) {
@@ -63,8 +64,8 @@ export default class List extends Component {
             record.status === 1
               ? "待办"
               : record.status === 2
-              ? "完成"
-              : "已删除",
+                ? "完成"
+                : "已删除",
         },
         {
           title: "Action",
@@ -155,13 +156,13 @@ export default class List extends Component {
   changeStatus = (item) => {
     if (item.status === 3) {
       item.status = 1; // 从删除变成代办
-      axios.post("/update_status", item).then((response) => {
+      request.post("/api/update_status", item).then((response) => {
         this.queryData("-1");
         message.success("状态变更代办成功");
       });
     } else if (item.status === 1) {
       item.status = 2; // 从代办变成完成
-      axios.post("/update_status", item).then((response) => {
+      request.post("/api/update_status", item).then((response) => {
         this.queryData("-1");
         message.success("状态变更完成");
       });
@@ -170,8 +171,8 @@ export default class List extends Component {
   // 删除数据
   delHandel = (item) => {
     message.success("任务删除成功");
-    item.status = "3"; // 全部改成删除装填
-    axios.post("/update_status", item).then((response) => {
+    item.status = 3; // 全部改成删除装填
+    request.post("/api/update_status", item).then((response) => {
       this.queryData("-1");
     });
   };
@@ -192,8 +193,8 @@ export default class List extends Component {
           item.status === 2
             ? "已完成"
             : item.status === 1
-            ? "待完成"
-            : "已删除",
+              ? "待完成"
+              : "已删除",
       });
     });
   }
@@ -204,7 +205,7 @@ export default class List extends Component {
     if (type === "add") {
       // 调用新增接口
       itemInfo.status = 1; // 默认是1
-      axios.post("/create", itemInfo).then((response) => {
+      request.post("/api/create", itemInfo).then((response) => {
         message.success("任务新增完成");
         this.queryData("-1");
         this.setState({
@@ -215,7 +216,7 @@ export default class List extends Component {
       // 调用修改接口
       itemInfo.status = saveStatus ? saveStatus : items.status;
       itemInfo.id = items.id;
-      axios.post("/update", itemInfo).then((response) => {
+      request.post("/api/update", itemInfo).then((response) => {
         message.success("任务修改完成");
         this.queryData("-1");
         this.setState({
@@ -227,7 +228,7 @@ export default class List extends Component {
 
   // 查询所有列表
   queryData(item) {
-    axios.get("/list/" + item + "/" + this.state.page).then((response) => {
+    request.get("/api/list/" + item + "/" + this.state.page).then((response) => {
       response.data.list.rows.forEach((ele, i) => {
         ele.key = i;
       });
