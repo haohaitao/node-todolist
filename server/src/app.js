@@ -15,8 +15,7 @@ const moment = require("moment");
 app.use(express.json());
 // 对url参数做解码
 app.use(express.urlencoded());
-// duibody参数做解码
-// app.use(bodyParser.urlencoded({ extends: true }));
+// 对body参数做解码
 app.use(express.urlencoded({ extended: false }));
 
 // 1.所有的错误，http status = 500
@@ -119,7 +118,6 @@ app.get("/list/:status/:page", async (req, res, next) => {
 });
 
 app.use((err, req, res, next) => {
-  console.log("req---", req);
   if (err) {
     res.status(500).json({
       message: err.message,
