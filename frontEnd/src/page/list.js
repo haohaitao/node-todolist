@@ -273,7 +273,7 @@ export default class List extends Component {
       <div className="wrapper" key={1}>
         <div className="header">
           <h1>导航</h1>
-          <a href="/home">返回首页</a>
+          <span onClick={() => this.props.history.goBack()}>返回首页</span>
         </div>
         <div className="divide">
           <Divider>任务列表</Divider>

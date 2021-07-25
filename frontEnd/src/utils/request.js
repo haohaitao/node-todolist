@@ -3,8 +3,8 @@ import { message } from 'antd'
 // 根据环境不同引入不同api地址
 // create an axios instance
 const service = axios.create({
-  // baseURL: 'https://nodejs.haoht123.com', // url = base api url + request url
-  withCredentials: true // send cookies when cross-domain requests
+  // baseURL: '', // url = base api url + request url
+  // withCredentials: true // send cookies when cross-domain requests
 })
 
 // request拦截器 request interceptor
