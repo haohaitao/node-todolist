@@ -2,7 +2,7 @@
  * @Description  : 使用hooks写list组件
  * @Author       : pacino
  * @Date         : 2021-07-27 10:34:59
- * @LastEditTime : 2021-07-27 17:56:12
+ * @LastEditTime : 2021-08-19 14:09:01
  * @LastEditors  : pacino
  */
 
@@ -123,6 +123,7 @@ function List() {
   const [items, setItems] = useState({});
   const [saveStatus, setStatus] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [state, setState] = useState(false);
 
   useEffect(() => {
     async function listInit() {
@@ -265,7 +266,7 @@ function List() {
   return (
     <div className="wrapper" key={1}>
       <div className="header">
-        <h1>导航</h1>
+        <h1 onClick={() => setState((state) => !state)}>{`导航${state}`}</h1>
         <span onClick={() => this.props.history.goBack()}>返回首页</span>
       </div>
       <div className="divide">
