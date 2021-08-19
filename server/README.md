@@ -2,7 +2,7 @@
  * @Description  : 
  * @Author       : pacino
  * @Date         : 2021-07-22 11:24:16
- * @LastEditTime : 2021-07-22 14:56:12
+ * @LastEditTime : 2021-08-19 16:55:52
  * @LastEditors  : pacino
 -->
 
@@ -16,13 +16,15 @@
 4.删除一个任务，根据ID
 5.修改任务的状态（ID/状态---待办/完成）
 
+# 安装依赖
+  + npm i or yarn 
 # API实现，在db文件夹执行
-  - 创建一个数据库
+  - 启动mysql服务，创建一个数据库，等下config文件要用
   - 初始化使用 `sequelize cli` 数据库配置信息
     + npx sequelize init
   - 生成模型文件（migrate 文件、model 文件）
     + `npx sequelize model:generate --name Todo --attributes name:string,deadline:date,content:string,status:integer`
-  - 持久化，模型队形的[数据库表]
+  - 持久化，模型对应的[数据库表]
     + npx sequelize db:migrate
   - sequelize默认会返回 ``` createAt和updateAt ``` 这两个字段
      在models文件夹中添加 timestamps 字段就可以不返回这两个字段
@@ -33,3 +35,5 @@
           modelName: 'Todo',
       });
     ```
+# 运行
+- npm start or yarn start
