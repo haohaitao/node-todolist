@@ -17,6 +17,8 @@ app.use(express.json());
 app.use(express.urlencoded());
 // 对body参数做解码
 app.use(express.urlencoded({ extended: false }));
+// 解析文本数据
+app.use(express.text());
 
 // 1.所有的错误，http status = 500
 // 查询任务列表
@@ -26,6 +28,39 @@ app.use(express.urlencoded({ extended: false }));
 //     list: [],
 //   });
 // });
+
+// 收集访客信息
+app.post("/send_info", async (req, res, next) => {
+  let accept_info = {};
+  // 判断是否是对象
+  if (Object.prototype.toString.call(req.body) === "[object Object]") {
+    accept_info = req.body;
+  } else {
+    accept_info = JSON.parse(req.body);
+  }
+  const ip = req.headers["x-real-ip"]
+    ? req.headers["x-real-ip"]
+    : req.ip.replace(/::ffff:/, "");
+  const host = accept_info.info.host; // 请求的host
+  const load = accept_info.info.load; // 加载时长
+  const req_date = moment(new Date()).format("YYYY-MM-DD HH:mm:ss"); // 请求的日期
+  console.log(host, load, req_date, ip);
+  //   数据持久化到数据库
+  try {
+    const n_optimization = await models.n_optimization.create({
+      host,
+      load,
+      req_date,
+      ip,
+    });
+    res.json({
+      n_optimization,
+      message: "优化记录已增加",
+    });
+  } catch (error) {
+    next(error);
+  }
+});
 
 // 创建一个todo
 app.post("/create", async (req, res, next) => {

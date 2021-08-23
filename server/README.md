@@ -24,6 +24,7 @@
     + npx sequelize init
   - 生成模型文件（migrate 文件、model 文件）
     + `npx sequelize model:generate --name Todo --attributes name:string,deadline:date,content:string,status:integer`
+	+ `npx sequelize model:generate --name n_optimization --attributes host:string,load:string,req_date:date,ip:string // 添加数据表，存储访客信息`
   - 持久化，模型对应的[数据库表]
     + npx sequelize db:migrate
   - sequelize默认会返回 ``` createAt和updateAt ``` 这两个字段
