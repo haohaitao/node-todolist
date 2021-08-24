@@ -2,7 +2,7 @@
  * @Description  :
  * @Author       : pacino
  * @Date         : 2021-07-22 14:00:47
- * @LastEditTime : 2021-07-23 16:31:12
+ * @LastEditTime : 2021-08-24 13:41:58
  * @LastEditors  : pacino
  */
 const express = require("express");
@@ -44,7 +44,10 @@ app.post("/send_info", async (req, res, next) => {
   const host = accept_info.info.host; // 请求的host
   const load = accept_info.info.load; // 加载时长
   const req_date = moment(new Date()).format("YYYY-MM-DD HH:mm:ss"); // 请求的日期
-  console.log(host, load, req_date, ip);
+  // 加入白名单
+  if (ip === "101.228.86.152" || ip === "120.204.217.34") {
+    return;
+  }
   //   数据持久化到数据库
   try {
     const n_optimization = await models.n_optimization.create({
