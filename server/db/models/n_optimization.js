@@ -2,7 +2,7 @@
  * @Description  :
  * @Author       : pacino
  * @Date         : 2021-08-20 16:16:38
- * @LastEditTime : 2021-08-20 16:32:55
+ * @LastEditTime : 2021-08-27 17:06:41
  * @LastEditors  : pacino
  */
 "use strict";
@@ -24,6 +24,7 @@ module.exports = (sequelize, DataTypes) => {
       load: DataTypes.STRING,
       req_date: DataTypes.DATE,
       ip: DataTypes.STRING,
+      address: DataTypes.STRING,
     },
     {
       sequelize,
