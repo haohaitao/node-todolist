@@ -2,7 +2,7 @@
  * @Description  :
  * @Author       : pacino
  * @Date         : 2021-07-22 14:00:47
- * @LastEditTime : 2021-08-24 13:41:58
+ * @LastEditTime : 2021-08-27 17:41:18
  * @LastEditors  : pacino
  */
 const express = require("express");
@@ -11,6 +11,8 @@ const app = express();
 
 const models = require("../db/models");
 const moment = require("moment");
+var request = require("request");
+
 // 处理json
 app.use(express.json());
 // 对url参数做解码
@@ -19,7 +21,8 @@ app.use(express.urlencoded());
 app.use(express.urlencoded({ extended: false }));
 // 解析文本数据
 app.use(express.text());
-
+// request乱码问题
+const iconv = require("iconv-lite");
 // 1.所有的错误，http status = 500
 // 查询任务列表
 // app.get("/list/:status/:page", async (req, res, next) => {
@@ -30,7 +33,7 @@ app.use(express.text());
 // });
 
 // 收集访客信息
-app.post("/send_info", async (req, res, next) => {
+app.post("/send_info", (req, res, next) => {
   let accept_info = {};
   // 判断是否是对象
   if (Object.prototype.toString.call(req.body) === "[object Object]") {
@@ -44,17 +47,48 @@ app.post("/send_info", async (req, res, next) => {
   const host = accept_info.info.host; // 请求的host
   const load = accept_info.info.load; // 加载时长
   const req_date = moment(new Date()).format("YYYY-MM-DD HH:mm:ss"); // 请求的日期
-  // 加入白名单
-  if (ip === "101.228.86.152" || ip === "120.204.217.34") {
-    return;
-  }
-  //   数据持久化到数据库
+  request(
+    {
+      url: `http://ip.ws.126.net/ipquery?ip=${ip}`,
+      method: "GET",
+      encoding: null,
+    },
+    async function (error, response, body) {
+      const ip_result = iconv.decode(body, "gb2312").toString();
+      console.log("body---", ip_result, ip_result.split(";")[0]);
+      const tempDate = (
+        ip_result.split(";")[0].split("=")[1] +
+        "-" +
+        ip_result.split(";")[0].split("=")[2]
+      ).replace(", lc", "");
+      const address = tempDate || "缺省";
+      //   数据持久化到数据库
+      try {
+        const n_optimization = await models.n_optimization.create({
+          host,
+          load,
+          req_date,
+          ip,
+          address,
+        });
+        res.json({
+          n_optimization,
+          message: "优化记录已增加",
+        });
+      } catch (error) {
+        next(error);
+      }
+    }
+  );
+});
+
+// 收集报错资源路径
+app.post("/up_err", async (req, res, next) => {
+  console.log('--req.body--', req.body)
+  const resources_err = req.body;
   try {
     const n_optimization = await models.n_optimization.create({
-      host,
-      load,
-      req_date,
-      ip,
+      resources_err
     });
     res.json({
       n_optimization,
@@ -164,5 +198,5 @@ app.use((err, req, res, next) => {
 });
 
 app.listen(3001, () => {
-  console.log("服务启动成功~");
+  console.log("服务启动成功，运行在3001端口~");
 });
