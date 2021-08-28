@@ -25,6 +25,7 @@ module.exports = (sequelize, DataTypes) => {
       req_date: DataTypes.DATE,
       ip: DataTypes.STRING,
       address: DataTypes.STRING,
+      resources_err: DataTypes.STRING
     },
     {
       sequelize,

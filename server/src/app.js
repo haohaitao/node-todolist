@@ -82,6 +82,23 @@ app.post("/send_info", (req, res, next) => {
   );
 });
 
+// 收集报错资源路径
+app.post("/up_err", async (req, res, next) => {
+  console.log('--req.body--', req.body)
+  const resources_err = req.body;
+  try {
+    const n_optimization = await models.n_optimization.create({
+      resources_err
+    });
+    res.json({
+      n_optimization,
+      message: "优化记录已增加",
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
 // 创建一个todo
 app.post("/create", async (req, res, next) => {
   const { name, deadline, content } = req.body;
